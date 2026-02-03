@@ -22,8 +22,5 @@
       "localPath": "extensions/line",
       "defaultChoice": "npm"
     }
-  },
-  "devDependencies": {
-    "clawdbot": "workspace:*"
   }
 }

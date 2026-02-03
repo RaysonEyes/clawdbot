@@ -1,0 +1,14 @@
+{
+  "id": "clawdbot-aicodewith-auth",
+  "providers": [
+    "aicodewith-claude",
+    "aicodewith-openai",
+    "aicodewith-gemini",
+    "aicodewith-antigravity"
+  ],
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {}
+  }
+}

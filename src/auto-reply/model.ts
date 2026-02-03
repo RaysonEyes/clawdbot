@@ -10,8 +10,22 @@ export function extractModelDirective(
   rawModel?: string;
   rawProfile?: string;
   hasDirective: boolean;
+  isTemporary?: boolean;
 } {
   if (!body) return { cleaned: "", hasDirective: false };
+
+  // Check for @local prefix (temporary model switch)
+  const localPrefixMatch = body.match(/^@local(\s+|$)/i);
+  if (localPrefixMatch) {
+    const cleaned = body.replace(localPrefixMatch[0], "").trim();
+    return {
+      cleaned,
+      rawModel: "local/glm-4.7-flash-claude-opus-4.5-high-reasoning-distill",
+      rawProfile: undefined,
+      hasDirective: true,
+      isTemporary: true,
+    };
+  }
 
   const modelMatch = body.match(
     /(?:^|\s)\/model(?=$|\s|:)\s*:?\s*([A-Za-z0-9_.:@-]+(?:\/[A-Za-z0-9_.:@-]+)*)?/i,

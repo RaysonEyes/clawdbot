@@ -1,0 +1,32 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Clawdbot
+GenericName=AI Agent Dashboard
+Comment=Open Clawdbot Dashboard
+Exec=bash -c "cd ~ && npx clawdbot dashboard"
+Terminal=false
+Icon=clawdbot
+Categories=Network;Chat;Utility;Development;
+Keywords=ai;agent;chat;automation;dashboard;clawdbot;moltbot;
+StartupNotify=true
+StartupWMClass=clawdbot-dashboard
+
+# Actions for different modes
+Actions=Dashboard;Gateway;CLI;Status;
+
+[Desktop Action Dashboard]
+Name=Open Dashboard
+Exec=bash -c "cd ~ && npx clawdbot dashboard"
+
+[Desktop Action Gateway]
+Name=Start Gateway
+Exec=x-terminal-emulator -e bash -c "npx clawdbot gateway run; exec bash"
+
+[Desktop Action CLI]
+Name=Open CLI
+Exec=x-terminal-emulator -e bash -c "npx clawdbot; exec bash"
+
+[Desktop Action Status]
+Name=Check Status
+Exec=x-terminal-emulator -e bash -c "npx clawdbot channels status --all; read -p 'Press Enter to close...'"

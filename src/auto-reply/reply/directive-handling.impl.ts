@@ -339,7 +339,7 @@ export async function handleDirectiveOnly(params: {
       sessionEntry.execNode = directives.execNode;
     }
   }
-  if (modelSelection) {
+  if (modelSelection && !params.directives.isTemporaryModel) {
     applyModelOverrideToSessionEntry({
       entry: sessionEntry,
       selection: modelSelection,

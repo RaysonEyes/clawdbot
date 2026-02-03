@@ -52,6 +52,13 @@ enum PermissionManager {
     }
 
     private static func ensureNotifications(interactive: Bool) async -> Bool {
+        // UNUserNotificationCenter.current() can crash in certain contexts.
+        // Check if we're running as a proper app before accessing it.
+        let isProhibited = await MainActor.run { NSApp.activationPolicy() == .prohibited }
+        guard !isProhibited else {
+            return false
+        }
+        
         let center = UNUserNotificationCenter.current()
         let settings = await center.notificationSettings()
 
@@ -190,6 +197,14 @@ enum PermissionManager {
         for cap in caps {
             switch cap {
             case .notifications:
+                // UNUserNotificationCenter.current() can crash in certain contexts
+                // (e.g., background processes, missing entitlements, --attach-only mode).
+                // We check if we're running as a proper app before accessing it.
+                let isProhibited = await MainActor.run { NSApp.activationPolicy() == .prohibited }
+                guard !isProhibited else {
+                    results[cap] = false
+                    break
+                }
                 let center = UNUserNotificationCenter.current()
                 let settings = await center.notificationSettings()
                 results[cap] = settings.authorizationStatus == .authorized

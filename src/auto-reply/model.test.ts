@@ -150,4 +150,50 @@ describe("extractModelDirective", () => {
       expect(result.hasDirective).toBe(false);
     });
   });
+
+  describe("@local prefix (temporary model switch)", () => {
+    it("extracts @local prefix and sets temporary flag", () => {
+      const result = extractModelDirective("@local hello world");
+      expect(result.hasDirective).toBe(true);
+      expect(result.rawModel).toBe("local/glm-4.7-flash-claude-opus-4.5-high-reasoning-distill");
+      expect(result.isTemporary).toBe(true);
+      expect(result.cleaned).toBe("hello world");
+    });
+
+    it("is case-insensitive for @local", () => {
+      const result = extractModelDirective("@LOCAL test message");
+      expect(result.hasDirective).toBe(true);
+      expect(result.rawModel).toBe("local/glm-4.7-flash-claude-opus-4.5-high-reasoning-distill");
+      expect(result.isTemporary).toBe(true);
+      expect(result.cleaned).toBe("test message");
+    });
+
+    it("handles @local with Chinese text", () => {
+      const result = extractModelDirective("@local 你好，世界");
+      expect(result.hasDirective).toBe(true);
+      expect(result.rawModel).toBe("local/glm-4.7-flash-claude-opus-4.5-high-reasoning-distill");
+      expect(result.isTemporary).toBe(true);
+      expect(result.cleaned).toBe("你好，世界");
+    });
+
+    it("does not match @local in the middle of text", () => {
+      const result = extractModelDirective("use @local model");
+      expect(result.hasDirective).toBe(false);
+      expect(result.cleaned).toBe("use @local model");
+    });
+
+    it("handles @local with no following text", () => {
+      const result = extractModelDirective("@local");
+      expect(result.hasDirective).toBe(true);
+      expect(result.rawModel).toBe("local/glm-4.7-flash-claude-opus-4.5-high-reasoning-distill");
+      expect(result.isTemporary).toBe(true);
+      expect(result.cleaned).toBe("");
+    });
+
+    it("does not set isTemporary for regular /model directive", () => {
+      const result = extractModelDirective("/model gpt-5");
+      expect(result.hasDirective).toBe(true);
+      expect(result.isTemporary).toBeUndefined();
+    });
+  });
 });

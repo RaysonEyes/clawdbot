@@ -165,15 +165,22 @@ export async function persistInlineDirectives(params: {
           }
           const isDefault =
             resolved.ref.provider === defaultProvider && resolved.ref.model === defaultModel;
-          const { updated: modelUpdated } = applyModelOverrideToSessionEntry({
-            entry: sessionEntry,
-            selection: {
-              provider: resolved.ref.provider,
-              model: resolved.ref.model,
-              isDefault,
-            },
-            profileOverride,
-          });
+
+          // Only persist model override if it's not a temporary switch
+          if (!directives.isTemporaryModel) {
+            const { updated: modelUpdated } = applyModelOverrideToSessionEntry({
+              entry: sessionEntry,
+              selection: {
+                provider: resolved.ref.provider,
+                model: resolved.ref.model,
+                isDefault,
+              },
+              profileOverride,
+            });
+            updated = updated || modelUpdated;
+          }
+
+          // Always apply the model for this request (temporary or not)
           provider = resolved.ref.provider;
           model = resolved.ref.model;
           const nextLabel = `${provider}/${model}`;
@@ -183,7 +190,6 @@ export async function persistInlineDirectives(params: {
               contextKey: `model:${nextLabel}`,
             });
           }
-          updated = updated || modelUpdated;
         }
       }
     }

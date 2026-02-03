@@ -1,8 +1,8 @@
 {
-  "name": "@moltbot/memory-core",
+  "name": "@moltbot/clawdbot-aicodewith-auth",
   "version": "2026.1.26",
   "type": "module",
-  "description": "Clawdbot core memory search plugin",
+  "description": "Clawdbot AICodewith provider plugin",
   "clawdbot": {
     "extensions": [
       "./index.ts"
